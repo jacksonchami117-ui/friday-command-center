@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NEXUS · FRIDAY Command Center (Live Dev Preview)</title>
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --card: #121923;
+      --muted: #7d8aa3;
+      --text: #e7efff;
+      --accent: #7aa2ff;
+      --ok: #31d0aa;
+      --warn: #ffb454;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text); background: radial-gradient(1200px 800px at 70% -10%, #142034 0%, var(--bg) 55%);
+      line-height: 1.5;
+    }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 24px; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .logo {
+      width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, #7aa2ff, #31d0aa);
+      box-shadow: 0 8px 24px rgba(122,162,255,.35);
+    }
+    h1 { margin: 0; font-size: 20px; letter-spacing: .4px; }
+    .badge { padding: 6px 10px; border-radius: 999px; background: #0f151e; border: 1px solid #253041; color: var(--muted); font-size: 12px; }
+    .grid { display: grid; gap: 16px; grid-template-columns: repeat(12, 1fr); margin-top: 18px; }
+    .card { grid-column: span 12; background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)); border: 1px solid #1f2a3b; border-radius: 16px; padding: 18px; backdrop-filter: blur(6px); }
+    .card h2 { margin-top: 0; font-size: 16px; color: #cfe1ff; }
+    .kpis { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); }
+    .kpi { background: #0f151e; border: 1px solid #1c2636; border-radius: 14px; padding: 14px; }
+    .kpi .label { color: var(--muted); font-size: 12px; }
+    .kpi .value { font-size: 22px; margin-top: 6px; }
+    .row { display: flex; gap: 10px; align-items: center; }
+    .pill { font-size: 12px; padding: 4px 8px; border-radius: 999px; border: 1px solid #223047; color: var(--muted); }
+    .ok { color: var(--ok); border-color: rgba(49,208,170,.35); }
+    .warn { color: var(--warn); border-color: rgba(255,180,84,.35); }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px 8px; border-bottom: 1px solid #1e2736; font-size: 14px; }
+    th { text-align: left; color: #a9c4ff; }
+    footer { margin-top: 28px; color: var(--muted); font-size: 13px; }
+    .muted { color: var(--muted); }
+    @media (min-width: 900px) {
+      .card.span-6 { grid-column: span 6; }
+      .card.span-8 { grid-column: span 8; }
+      .card.span-4 { grid-column: span 4; }
+    }
+    .cta { display:inline-flex; align-items:center; gap:8px; background:#12223a; border:1px solid #20324d; padding:10px 14px; border-radius:12px; text-decoration:none; color:#d6e6ff; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <h1>NEXUS · FRIDAY Command Center</h1>
+          <div class="badge">Live Dev Preview • static build • 2025-08-11 22:34 UTC</div>
+        </div>
+      </div>
+      <a class="cta" href="#" onclick="location.reload()">Refresh</a>
+    </header>
+
+    <div class="grid">
+      <section class="card span-6">
+        <h2>Build Status</h2>
+        <div class="kpis">
+          <div class="kpi">
+            <div class="label">Agents Online</div>
+            <div class="value" id="agentsOnline">—</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Last Render</div>
+            <div class="value" id="lastRender">—</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Videos Today</div>
+            <div class="value" id="videosToday">—</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Errors (24h)</div>
+            <div class="value" id="errors24">—</div>
+          </div>
+        </div>
+        <p class="muted" style="margin-top:12px">This preview is static. Live numbers will populate once backend wiring is connected.</p>
+      </section>
+
+      <section class="card span-6">
+        <h2>Run Log (Preview)</h2>
+        <table id="logTable">
+          <thead><tr><th>Time</th><th>Event</th><th>Status</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </section>
+
+      <section class="card span-8">
+        <h2>NEXUS Roadmap (Short)</h2>
+        <ul>
+          <li>CI/CD on Vercel (this page) ✅</li>
+          <li>Agent B rendering pipeline → connect stats</li>
+          <li>Loom upload + thumbnail extraction</li>
+          <li>Google Sheet logging + daily report</li>
+          <li>Discord webhooks for build updates</li>
+        </ul>
+      </section>
+
+      <section class="card span-4">
+        <h2>Sanity Checklist</h2>
+        <ul>
+          <li>Mobile viewport OK (≤390px)</li>
+          <li>Header doesn't wrap awkwardly</li>
+          <li>Table scrolls horizontally if needed</li>
+          <li>No 404s in console</li>
+        </ul>
+      </section>
+    </div>
+
+    <footer>
+      <div>© 2025 NEXUS — “Build fast. Break nothing.”</div>
+    </footer>
+  </div>
+  <script>
+    const sample = {
+      agentsOnline: 3,
+      lastRender: "—",
+      videosToday: 0,
+      errors24: 0,
+      log: [
+        ["22:34:23","Deployed static preview build","OK"],
+        ["22:34:23","CI/CD ready on push to main","OK"],
+        ["22:34:23","Awaiting backend wiring","WAIT"]
+      ]
+    };
+    document.getElementById('agentsOnline').textContent = sample.agentsOnline;
+    document.getElementById('lastRender').textContent = sample.lastRender;
+    document.getElementById('videosToday').textContent = sample.videosToday;
+    document.getElementById('errors24').textContent = sample.errors24;
+
+    const tbody = document.querySelector('#logTable tbody');
+    sample.log.forEach(([t, e, s]) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${t}</td><td>${e}</td><td><span class="pill ${s==='OK'?'ok':(s==='WAIT'?'warn':'')}">${s}</span></td>`;
+      tbody.appendChild(tr);
+    });
+  </script>
+</body>
+</html>
