@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NEXUS · FRIDAY Command Center (Live Dev Preview)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <canvas id="matrix" class="hidden"></canvas>
+
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <h1>NEXUS · FRIDAY Command Center</h1>
+          <div class="badge">Live Dev Preview • static build • 2025-08-11 23:01 UTC</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" id="toggleAnim">Toggle Matrix</button>
+        <button class="btn" id="refreshBtn">Refresh</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <section class="card span-6">
+        <h2>Build Status</h2>
+        <div class="kpis">
+          <div class="kpi">
+            <div class="label">Agents Online</div>
+            <div class="value" id="agentsOnline">3</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Last Render</div>
+            <div class="value" id="lastRender">—</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Videos Today</div>
+            <div class="value" id="videosToday">0</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Errors (24h)</div>
+            <div class="value" id="errors24">0</div>
+          </div>
+        </div>
+        <p class="muted" style="margin-top:12px">This preview is static. Live numbers will populate once backend wiring is connected.</p>
+      </section>
+
+      <section class="card span-6">
+        <h2>Run Log (Preview)</h2>
+        <table id="logTable">
+          <thead><tr><th>Time</th><th>Event</th><th>Status</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </section>
+
+      <section class="card span-8">
+        <h2>NEXUS Roadmap (Short)</h2>
+        <ul>
+          <li>CI/CD on Vercel (this page) ✅</li>
+          <li>Agent B rendering pipeline → connect stats</li>
+          <li>Loom upload + thumbnail extraction</li>
+          <li>Google Sheet logging + daily report</li>
+          <li>Discord webhooks for build updates</li>
+        </ul>
+      </section>
+
+      <section class="card span-4">
+        <h2>Sanity Checklist</h2>
+        <ul>
+          <li>Mobile viewport OK (≤390px)</li>
+          <li>Header doesn't wrap awkwardly</li>
+          <li>Table scrolls horizontally if needed</li>
+          <li>No 404s in console</li>
+        </ul>
+      </section>
+    </div>
+
+    <footer>
+      <div>© 2025 NEXUS — “Build fast. Break nothing.”</div>
+    </footer>
+  </div>
+
+  <script src="assets/matrix.js"></script>
+  <script>
+    const sample = {
+      agentsOnline: 3,
+      lastRender: "—",
+      videosToday: 0,
+      errors24: 0,
+      log: [
+        ["23:01:55", "Deployed static preview build", "OK"],
+        ["23:01:55", "CI/CD ready on push to main", "OK"],
+        ["23:01:55", "Awaiting backend wiring", "WAIT"]
+      ]
+    };
+
+    document.getElementById('agentsOnline').textContent = sample.agentsOnline;
+    document.getElementById('lastRender').textContent = sample.lastRender;
+    document.getElementById('videosToday').textContent = sample.videosToday;
+    document.getElementById('errors24').textContent = sample.errors24;
+
+    const tbody = document.querySelector('#logTable tbody');
+    sample.log.forEach(([t, e, s]) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${t}</td><td>${e}</td><td><span class="pill ${s==='OK'?'ok':(s==='WAIT'?'warn':'')}">${s}</span></td>`;
+      tbody.appendChild(tr);
+    });
+
+    document.getElementById('refreshBtn').onclick = () => location.reload();
+
+    // Animation toggle
+    const toggle = document.getElementById('toggleAnim');
+    toggle.addEventListener('click', () => {
+      const cvs = document.getElementById('matrix');
+      cvs.classList.toggle('hidden');
+      if (!cvs.classList.contains('hidden')) window.startMatrix();
+      else window.stopMatrix();
+    });
+  </script>
+</body>
+</html>
